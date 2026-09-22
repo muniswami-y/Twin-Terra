@@ -1,2 +1,0 @@
-"""Twin-Terra scripts package."""
-
