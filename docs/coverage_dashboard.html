@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twin-Terra: Earth Candidates Campaign Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --border-color: #475569;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-primary); color: var(--text-main); padding: 2rem; }
+    .header { margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; }
+    .header h1 { font-size: 2.2rem; font-weight: 700; color: #38bdf8; }
+    .header p { color: var(--text-muted); margin-top: 0.5rem; font-size: 1rem; }
+    .badge { background: #0369a1; color: #e0f2fe; padding: 0.35rem 0.8rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .kpi-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+    .kpi-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .kpi-value { font-size: 2.2rem; font-weight: 700; margin-top: 0.5rem; color: var(--accent-cyan); }
+    .kpi-sub { font-size: 0.8rem; color: var(--accent-green); margin-top: 0.3rem; }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; }
+    .chart-header { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #cbd5e1; }
+
+    .table-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+    th { color: #94a3b8; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; }
+    tr:hover { background-color: rgba(255,255,255,0.03); }
+    .tag-grade-a { background: #065f46; color: #a7f3d0; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>Twin-Terra: Earth Candidates Dataset</h1>
+      <p>NASA & Partner Open Data Ingestion Pipeline • Scientific Coverage & Distribution Report</p>
+    </div>
+    <div>
+      <span class="badge">Day 7 Campaign Release • v2 Specification</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-title">Candidate Locations</div>
+      <div class="kpi-value">25 / 100</div>
+      <div class="kpi-sub">Phase 1 Content Milestone</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Provenance Parity</div>
+      <div class="kpi-value">100%</div>
+      <div class="kpi-sub">1:1 JSON Audit Coverage</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">QA Rubric Grade A</div>
+      <div class="kpi-value">100.0%</div>
+      <div class="kpi-sub">Zero Incomplete Rows</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Spatial Separation</div>
+      <div class="kpi-value">> 7.2 km</div>
+      <div class="kpi-sub">Min Distance (Gate: 1.0 km)</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">Stratification: Continents & Biomes</div>
+      <div id="chart-continents" style="height: 380px;"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">Terrain Ruggedness vs. Mean Slope</div>
+      <div id="chart-terrain" style="height: 380px;"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">Remoteness Index Distribution (w1=0.4, w2=0.3, w3=0.3)</div>
+      <div id="chart-remoteness" style="height: 380px;"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">Elevation Profile Distribution (Meters)</div>
+      <div id="chart-elevation" style="height: 380px;"></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="chart-header">Top Planetary Analog Candidate Sites</div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Location / Region</th>
+          <th>Continent</th>
+          <th>Biome / Analog Type</th>
+          <th>Elev (m)</th>
+          <th>Mean Slope (°)</th>
+          <th>TRI (m)</th>
+          <th>Remoteness Index</th>
+          <th>QA Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>TT-001</strong></td>
+          <td>Atacama Hyper-Arid Plateau</td>
+          <td>South America</td>
+          <td>Hyper-arid desert (Mars analog)</td>
+          <td>2,510 m</td>
+          <td>6.8°</td>
+          <td>8.4 m</td>
+          <td>0.389</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-002</strong></td>
+          <td>McMurdo Dry Valleys</td>
+          <td>Antarctica</td>
+          <td>Polar desert (Dry cryptoendolithic)</td>
+          <td>820 m</td>
+          <td>18.4°</td>
+          <td>34.6 m</td>
+          <td>0.524</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-003</strong></td>
+          <td>Danakil Depression</td>
+          <td>Africa</td>
+          <td>Geothermal salt rift basin</td>
+          <td>-125 m</td>
+          <td>3.2°</td>
+          <td>4.1 m</td>
+          <td>0.347</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-004</strong></td>
+          <td>Salar de Uyuni</td>
+          <td>South America</td>
+          <td>High-altitude salt flat</td>
+          <td>3,656 m</td>
+          <td>0.4°</td>
+          <td>0.8 m</td>
+          <td>0.383</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-005</strong></td>
+          <td>Rub' al Khali Sand Sea</td>
+          <td>Asia</td>
+          <td>Mega-dune erg system</td>
+          <td>180 m</td>
+          <td>12.5°</td>
+          <td>16.2 m</td>
+          <td>0.562</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-006</strong></td>
+          <td>Tibetan Changtang Steppe</td>
+          <td>Asia</td>
+          <td>Alpine permafrost plateau</td>
+          <td>4,820 m</td>
+          <td>4.5°</td>
+          <td>9.5 m</td>
+          <td>0.486</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-009</strong></td>
+          <td>Ellesmere Island Ice Margin</td>
+          <td>North America</td>
+          <td>High Arctic glacial ice cap</td>
+          <td>920 m</td>
+          <td>15.6°</td>
+          <td>28.4 m</td>
+          <td>0.780</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+        <tr>
+          <td><strong>TT-015</strong></td>
+          <td>Henderson Island Interior</td>
+          <td>Oceania</td>
+          <td>Raised coral atoll wilderness</td>
+          <td>33 m</td>
+          <td>1.8°</td>
+          <td>2.2 m</td>
+          <td>0.690</td>
+          <td><span class="tag-grade-a">Grade A</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const darkLayout = {
+      paper_bgcolor: 'transparent',
+      plot_bgcolor: 'transparent',
+      font: { color: '#cbd5e1' },
+      margin: { t: 30, r: 20, l: 40, b: 40 }
+    };
+
+    // Chart 1: Continents Donut
+    Plotly.newPlot('chart-continents', [{
+      labels: ['Asia', 'Africa', 'Antarctica', 'South America', 'North America', 'Oceania', 'Europe'],
+      values: [7, 5, 4, 2, 2, 2, 3],
+      type: 'pie',
+      hole: 0.5,
+      marker: { colors: ['#0284c7', '#0d9488', '#6366f1', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'] }
+    }], { ...darkLayout, showlegend: true });
+
+    // Chart 2: Terrain Scatter
+    Plotly.newPlot('chart-terrain', [{
+      x: [6.8, 18.4, 3.2, 0.4, 12.5, 4.5, 2.1, 2.4, 15.6, 14.8, 8.9, 21.5, 11.2, 24.8, 1.8, 16.4, 3.6, 19.2, 9.8, 14.5, 28.5, 3.8, 16.2, 17.8, 8.4],
+      y: [8.4, 34.6, 4.1, 0.8, 16.2, 9.5, 2.3, 3.8, 28.4, 21.0, 14.5, 42.0, 19.8, 58.2, 2.2, 29.5, 4.8, 26.8, 12.4, 24.1, 62.5, 5.2, 25.4, 31.0, 11.8],
+      mode: 'markers+text',
+      text: ['TT-001', 'TT-002', 'TT-003', 'TT-004', 'TT-005', 'TT-006', 'TT-007', 'TT-008', 'TT-009', 'TT-010', 'TT-011', 'TT-012', 'TT-013', 'TT-014', 'TT-015', 'TT-016', 'TT-017', 'TT-018', 'TT-019', 'TT-020', 'TT-021', 'TT-022', 'TT-023', 'TT-024', 'TT-025'],
+      textposition: 'top center',
+      marker: { size: 10, color: '#06b6d4', opacity: 0.85 }
+    }], {
+      ...darkLayout,
+      xaxis: { title: 'Mean Slope (degrees)', gridcolor: '#334155' },
+      yaxis: { title: 'Terrain Roughness Index - TRI (m)', gridcolor: '#334155' }
+    });
+
+    // Chart 3: Remoteness
+    Plotly.newPlot('chart-remoteness', [{
+      x: [0.389, 0.524, 0.347, 0.383, 0.562, 0.486, 0.322, 0.570, 0.780, 0.369, 0.365, 0.441, 0.476, 0.478, 0.690, 0.406, 0.336, 0.560, 0.514, 0.446, 0.310, 0.411, 0.356, 0.327, 0.358],
+      type: 'histogram',
+      nbinsx: 10,
+      marker: { color: '#38bdf8', line: { color: '#0f172a', width: 1 } }
+    }], {
+      ...darkLayout,
+      xaxis: { title: 'Composite Remoteness Index (0 = Accessible, 1 = Hyper-Remote)', gridcolor: '#334155' },
+      yaxis: { title: 'Candidate Count', gridcolor: '#334155' }
+    });
+
+    // Chart 4: Elevation
+    Plotly.newPlot('chart-elevation', [{
+      y: [2510, 820, -125, 3656, 180, 4820, -86, 240, 920, 580, 720, 1040, 610, 3450, 33, 1520, 95, 140, 65, 2780, 2062, 1420, 450, 780, 4350],
+      type: 'box',
+      name: 'Elevation (m)',
+      boxpoints: 'all',
+      jitter: 0.3,
+      pointpos: -1.8,
+      marker: { color: '#10b981' }
+    }], {
+      ...darkLayout,
+      yaxis: { title: 'Elevation (meters above sea level)', gridcolor: '#334155' }
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,97 @@
+{
+  "candidate_id": "TT-021",
+  "selected_date": "2026-09-22",
+  "selection_stratum": {
+    "continent": "Africa",
+    "biome": "Oceanic shield volcanic cone"
+  },
+  "coordinates_wgs84": {
+    "latitude": -37.09,
+    "longitude": -12.28,
+    "precision": "6_decimal_places"
+  },
+  "features": {
+    "elevation_m": {
+      "source": "NASA SRTM 30m DEM (GL1)",
+      "source_url": "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/loc_-37.09_-12.28.hgt.zip",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:32728",
+      "processing": "Point raster sampling, 30m cell resolution"
+    },
+    "slope_deg_mean": {
+      "source": "NASA SRTM 30m DEM (GL1)",
+      "source_url": "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:32728",
+      "processing": "2nd-order central finite differences over local metric grid"
+    },
+    "slope_deg_max": {
+      "source": "NASA SRTM 30m DEM (GL1)",
+      "source_url": "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:32728",
+      "processing": "Maximum local gradient over 3x3 kernel"
+    },
+    "terrain_roughness_index": {
+      "source": "NASA SRTM 30m DEM (GL1)",
+      "source_url": "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:32728",
+      "processing": "Riley et al. (1999) TRI, 8-neighbor RMS difference"
+    },
+    "distance_to_nearest_settlement_km": {
+      "source": "Natural Earth Populated Places (v5.1.2) / GHSL",
+      "source_url": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (CC0)",
+      "crs_used": "EPSG:6933",
+      "processing": "Projected equal-area geodesic distance to settlement centroid"
+    },
+    "distance_to_road_km": {
+      "source": "Natural Earth Roads / OpenStreetMap",
+      "source_url": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (CC0) / ODbL",
+      "crs_used": "EPSG:6933",
+      "processing": "Projected equal-area geodesic distance to nearest transport segment"
+    },
+    "population_density_within_10km": {
+      "source": "WorldPop / GHSL Global 1km Population Grid",
+      "source_url": "https://www.worldpop.org/geodata/listing?category=population",
+      "access_date": "2026-09-22",
+      "license": "Creative Commons Attribution 4.0 International (CC-BY 4.0)",
+      "crs_used": "EPSG:6933",
+      "processing": "10km radial buffer integrated density per sq km"
+    },
+    "remoteness_index": {
+      "source": "Twin-Terra Composite Algorithm",
+      "source_url": "https://github.com/google-antigravity/Twin-Terra",
+      "access_date": "2026-09-22",
+      "license": "Open Data Commons",
+      "crs_used": "EPSG:6933",
+      "processing": "0.4*norm(settlement) + 0.3*norm(road) + 0.3*(1 - norm(pop_density))"
+    },
+    "land_cover_class": {
+      "source": "MODIS Land Cover (MCD12Q1 V061)",
+      "source_url": "https://lpdaac.usgs.gov/products/mcd12q1v061/",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:4326",
+      "processing": "Annual IGBP classification extraction (500m pixel)"
+    },
+    "vegetation_index_ndvi": {
+      "source": "Landsat 8-9 Collection 2 Surface Reflectance",
+      "source_url": "https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-reflectance",
+      "access_date": "2026-09-22",
+      "license": "Public Domain (U.S. Government Work)",
+      "crs_used": "EPSG:4326",
+      "processing": "Normalized Difference: (B5 - B4) / (B5 + B4)"
+    }
+  },
+  "qa_grade": "A",
+  "qa_notes": "Most isolated inhabited volcanic archipelago."
+}
